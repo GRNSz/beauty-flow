@@ -9,4 +9,10 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+
+  @Get('/teste')
+  getTestServer(): string {
+    return this.appService.getTestServer();
+  }
+
 }

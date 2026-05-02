@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBarbeariaDto } from './dto/create-barbearia.dto';
 import { UpdateBarbeariaDto } from './dto/update-barbearia.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Barbearia } from './entities/barbearia.entity';
 
 @Injectable()
 export class BarbeariasService {
-  create(createBarbeariaDto: CreateBarbeariaDto) {
-    return 'This action adds a new barbearia';
+  constructor(
+      @InjectRepository(Barbearia)
+      private barbeariasRepository: Repository<Barbearia>,
+  ) {}
+
+  async create(createBarbeariaDto: CreateBarbeariaDto) {
+    const barbearia = this.barbeariasRepository.create(createBarbeariaDto);
+    return this.barbeariasRepository.save(barbearia);
   }
 
-  findAll() {
-    return `This action returns all barbearias`;
+  async findAll() {
+    return this.barbeariasRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} barbearia`;
+  async findOne(id: number) {
+    return this.barbeariasRepository.findOne({ where: { id } });
   }
 
-  update(id: number, updateBarbeariaDto: UpdateBarbeariaDto) {
-    return `This action updates a #${id} barbearia`;
+  async update(id: number, updateBarbeariaDto: UpdateBarbeariaDto) {
+    await this.barbeariasRepository.update(id, updateBarbeariaDto);
+    return this.findOne(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} barbearia`;
+  async remove(id: number) {
+    await this.barbeariasRepository.delete(id);
   }
 }
