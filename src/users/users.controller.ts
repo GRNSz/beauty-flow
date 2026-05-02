@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -9,32 +9,53 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post('/cadastrarusuario')
-  create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
     try {
-      return this.usersService.create(createUserDto);
+      return await this.usersService.create(createUserDto);
     } catch (error) {
-      throw new Error('Erro ao criar usuário: ' + error.message);
+      const msg = error instanceof Error ? error.message : String(error);
+      throw new BadRequestException('Erro ao criar usuário: ' + msg);
     }
   }
 
   @Get('/listarusuarios')
-  findAll() {
-    return this.usersService.findAll();
+  async findAll() {
+    try {
+      return await this.usersService.findAll();
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      throw new BadRequestException('Erro ao listar usuários: ' + msg);
+    }
   }
 
   @Get('/buscarusuario/:id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    try {
+      return await this.usersService.findOne(+id);
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      throw new BadRequestException('Erro ao buscar usuário: ' + msg);
+    }
   }
 
   @Patch('/atualizarusuario/:id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    try {
+      return await this.usersService.update(+id, updateUserDto);
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      throw new BadRequestException('Erro ao atualizar usuário: ' + msg);
+    }
   }
 
   @Delete('/excluirusuario/:id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  async remove(@Param('id') id: string) {
+    try {
+      return await this.usersService.remove(+id);
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      throw new BadRequestException('Erro ao excluir usuário: ' + msg);
+    }
   }
 }
 
