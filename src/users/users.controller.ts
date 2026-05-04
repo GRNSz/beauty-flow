@@ -3,6 +3,12 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { response } from 'express';
+import { ResponseUserDto } from './dto/response-user.dto';
+
+//TODO - Não expor senha nas respostas da API (ex: usando class-transformer + @Exclude para excluir o campo senha ou criando um DTO específico para respostas)
+
+//TODO - Implementar autenticação e autorização (ex: usando JWT para autenticação e guardas para proteger rotas, além de implementar controle de acesso baseado em funções/níveis de permissão e Auth Module para gerenciar autenticação e autorização de forma centralizada)
 
 @Controller('users')
 export class UsersController {
@@ -11,7 +17,11 @@ export class UsersController {
   @Post('/cadastrarusuario')
   async create(@Body() createUserDto: CreateUserDto) {
     try {
-      return await this.usersService.create(createUserDto);
+      const user = await this.usersService.create(createUserDto)
+      return user;
+
+      // const response = await this.usersService.create(createUserDto, new ResponseUserDto());
+      // return response;
     } catch (error) {
       const msg = error instanceof Error ? error.message : String(error);
       throw new BadRequestException('Erro ao criar usuário: ' + msg);

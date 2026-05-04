@@ -6,9 +6,19 @@ import { BarbeariasModule } from './barbearias/barbearias.module';
 import { PedidosModule } from './pedidos/pedidos.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { ConfigModule } from '@nestjs/config';
+
+// Para produção, desativar synchronize: true e usar migrations para controle de versão do banco de dados, garantindo maior segurança e controle sobre as alterações no esquema do banco de dados.
+
+//TODO - Adicionar validação das variáveis de ambiente usando @nestjs/config + Joi para validar, db, jwt secret, PORT e etc. garantindo que a aplicação tenha as configurações necessárias para rodar corretamente e de forma segura, além de evitar erros de configuração em tempo de execução.
 
 @Module({
   imports: [UsersModule, BarbeariasModule, PedidosModule, 
+    
+  ConfigModule.forRoot({
+    isGlobal: true,
+    envFilePath: '.env',
+  }), 
   
   TypeOrmModule.forRoot({
     type: 'mysql',
