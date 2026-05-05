@@ -30,6 +30,19 @@ export class UsersService {
     }
   }
 
+  async getPerfil(id: number): Promise<ResponseUserDto> {
+    try {
+      const userProfile = await this.usersRepository.findOne({ where: { id } });
+      if (!userProfile) {
+        throw new Error('Usuário não encontrado');
+      } else {
+        return userProfile;
+      }
+    } catch (error) {
+      throw new Error('Erro ao buscar perfil do usuário: ' + (error instanceof Error ? error.message : String(error)));
+    }
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     try {
       const user = await this.usersRepository.findOne({ where: { email } });

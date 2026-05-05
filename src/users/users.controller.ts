@@ -28,6 +28,17 @@ export class UsersController {
     }
   }
 
+  @Get('/perfil/:id')
+  async getPerfil(@Param('id') id: number): Promise<ResponseUserDto> {
+    try {
+      const userProfile = await this.usersService.getPerfil(id);
+      return userProfile;
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String('O perfil do usuário não pôde ser encontrado: ');
+      throw new BadRequestException(msg);
+    }
+  }
+
   @Get('/listarusuarios')
   async findAll() {
     try {
