@@ -17,7 +17,7 @@ export class UsersService {
       private usersRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto, /*responseUserDto: ResponseUserDto*/) {
+  async create(createUserDto: CreateUserDto/*responseUserDto: ResponseUserDto*/) {
     try {
       const hashedPassword = await bcrypt.hash(createUserDto.senha, 10);
       const user = this.usersRepository.create({
@@ -27,6 +27,15 @@ export class UsersService {
       return await this.usersRepository.save(user);
     } catch (error) {
       throw new Error('Erro ao criar usuário: ' + (error instanceof Error ? error.message : String(error)));
+    }
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    try {
+      const user = await this.usersRepository.findOne({ where: { email } });
+      return user;
+    } catch (error) {
+      throw new Error('Erro ao buscar usuário por email: ' + (error instanceof Error ? error.message : String(error)));
     }
   }
 

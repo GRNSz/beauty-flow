@@ -7,6 +7,7 @@ import { PedidosModule } from './pedidos/pedidos.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 // Para produção, desativar synchronize: true e usar migrations para controle de versão do banco de dados, garantindo maior segurança e controle sobre as alterações no esquema do banco de dados.
 
@@ -30,7 +31,7 @@ import { ConfigModule } from '@nestjs/config';
     synchronize: true,
     autoLoadEntities: true,
     //entities: [__dirname + '/**/*.entity{.ts,.js}'],
-  })],
+  }), AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
